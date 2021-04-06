@@ -12,7 +12,7 @@ const groceries = [
     purchased: false
   },
   {
-    name: 'Torillas',
+    name: 'Tortillas',
     id: 124,
     purchased: false
   },
@@ -43,8 +43,41 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      groceries:groceries
+      groceries: groceries
     }
+  }
+
+  toggleItem = (id) => {
+    const newGroceries = this.state.groceries.map(item => {
+      if (item.id === id) {
+        return( {
+          ...item,
+          purchased: !item.purchased
+        });
+      } else {
+        return item;
+      }
+    });
+
+    this.setState({
+      groceries: newGroceries
+    });
+  }
+
+  addItem = (itemName) => {
+    this.setState({
+      groceries: [...this.state.groceries, {
+        name: itemName,
+        id: this.state.groceries.length,
+        purchased: false
+      }]
+    });
+  }
+
+  clearPurchased = e => {
+    this.setState({
+      groceries: this.state.groceries.filter( item => (!item.purchased))
+    });
   }
 
   // Class methods to update state
@@ -53,9 +86,9 @@ class App extends React.Component {
       <div className="App">
         <div className="header">
            <h1>Shopping List</h1>
-           <ListForm />
+           <ListForm addItem={ this.addItem }/>
          </div>
-        <GroceryList groceries={groceries} />
+        <GroceryList clearPurchased={ this.clearPurchased } toggleItem={ this.toggleItem } groceries={this.state.groceries} />
        </div>
     );
   }
